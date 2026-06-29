@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FUSTAR — 暗夜美学 · 服装品牌</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ========== NAVIGATION ========== -->
+  <nav id="navbar">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+        <img src="透明logo图片.png" alt="FUSTAR" class="nav-logo-img">
+      </a>
+      <ul class="nav-links">
+        <li><a href="#hero">首页</a></li>
+        <li><a href="#gallery">视觉</a></li>
+        <li><a href="#about">关于</a></li>
+        <li><a href="#contact">联系</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ========== HERO ========== -->
+  <section id="hero">
+    <canvas class="hero-ripple-canvas" id="heroRipple"></canvas>
+    <div class="hero-content">
+      <div class="hero-logo-wrap">
+        <img src="透明logo图片.png" alt="FUSTAR" class="hero-logo">
+      </div>
+      <p class="hero-subtitle">暗 夜 美 学  ·  重 塑 着 装</p>
+      <p class="hero-desc">以黑暗为底色，以赤红为态度。<br>为不羁的灵魂而生。</p>
+    </div>
+    <div class="hero-scroll">
+      <span>向下探索</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ========== GALLERY ========== -->
+  <section id="gallery">
+    <div class="section-header">
+      <h2>视觉档案</h2>
+      <p>每一件，皆是态度</p>
+    </div>
+    <button class="gallery-enter-btn" id="galleryEnter">
+      <span class="btn-text">产品预览</span>
+      <span class="btn-arrow">&rarr;</span>
+    </button>
+    <!-- Full-screen category browser -->
+    <div class="gallery-browser" id="galleryBrowser">
+      <span class="browser-close" id="browserClose">&times;</span>
+      <div class="browser-inner">
+        <div class="browser-tabs" id="browserTabs">
+          <!-- Injected by JS -->
+        </div>
+        <div class="browser-grid" id="browserGrid">
+          <!-- Injected by JS -->
+        </div>
+      </div>
+      <!-- Image detail viewer -->
+      <div class="browser-viewer" id="browserViewer">
+        <span class="viewer-close" id="bvClose">&times;</span>
+        <span class="viewer-prev" id="bvPrev">&lsaquo;</span>
+        <span class="viewer-next" id="bvNext">&rsaquo;</span>
+        <div class="viewer-content">
+          <img id="bvImg" src="" alt="">
+          <div class="viewer-info">
+            <span id="bvCat"></span>
+            <span id="bvIndex"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== ABOUT ========== -->
+  <section id="about">
+    <div class="about-grid">
+      <div class="about-text">
+        <h2>关于 Fustar</h2>
+        <p>
+          Fustar 诞生于暗夜之中，以黑红为精神图腾。
+          我们不追随潮流，我们定义态度。
+        </p>
+        <p>
+          每一件作品都是对平庸的反叛——用剪裁说话，用质感发声。
+          在光与暗的交界处，找到属于你的表达方式。
+        </p>
+        <div class="about-values">
+          <div class="value-item">
+            <span class="value-num">01</span>
+            <span class="value-label">黑暗美学</span>
+          </div>
+          <div class="value-item">
+            <span class="value-num">02</span>
+            <span class="value-label">极致剪裁</span>
+          </div>
+          <div class="value-item">
+            <span class="value-num">03</span>
+            <span class="value-label">不羁态度</span>
+          </div>
+        </div>
+      </div>
+      <div class="about-image">
+        <img src="视觉图片/其他/全套内容.jpg" alt="Fustar 全套内容" class="about-img">
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CONTACT / FOOTER ========== -->
+  <section id="contact">
+    <div class="contact-inner">
+      <h2>加入暗夜</h2>
+      <p class="contact-desc">关注我们，第一时间获取新品与独家内容。</p>
+      <div class="contact-social">
+        <a href="https://v.douyin.com/OmvRCgrd95c/" target="_blank" rel="noopener">Douyin</a>
+        <a href="https://xhslink.com/m/5QfxDf02JC6" target="_blank" rel="noopener">Xiaohongshu</a>
+        <a href="#" class="weixin-link" data-tip="hyp1213016856">Weixin</a>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-brand">Fustar</p>
+        <p class="footer-copy">© 2026 Fustar. 保留所有权利。</p>
+      </div>
+    </div>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
