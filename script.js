@@ -55,12 +55,16 @@
       const item = document.createElement('div');
       item.className = 'browser-item';
       item.innerHTML = `
-        <img src="${path}" alt="${cat.name} ${i + 1}" loading="lazy">
+        <img src="${path}" alt="${cat.name} ${i + 1}" loading="lazy" decoding="async">
         <span class="item-num">0${i + 1}</span>
       `;
       const img = item.querySelector('img');
-      img.addEventListener('load', () => img.classList.add('loaded'));
-      if (img.complete) img.classList.add('loaded');
+      const onLoad = () => {
+        img.classList.add('loaded');
+        item.classList.add('loaded');
+      };
+      img.addEventListener('load', onLoad);
+      if (img.complete) onLoad();
       item.addEventListener('click', () => openBv(cat, i));
       browserGrid.appendChild(item);
     });

@@ -754,22 +754,43 @@ img {
 
 .browser-item:hover::before { opacity: 1; }
 
+.browser-item {
+  position: relative;
+}
+
+/* Skeleton loading shimmer */
+.browser-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(90deg, rgba(20,20,20,0) 0%, rgba(40,40,40,0.4) 50%, rgba(20,20,20,0) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.browser-item.loaded::before {
+  opacity: 0;
+  animation: none;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
 .browser-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.6s ease, opacity 0.5s ease;
+  transition: transform 0.6s ease, opacity 0.4s ease;
   opacity: 0;
-  animation: imgReveal 0.6s ease forwards;
 }
 
 .browser-item img.loaded {
   opacity: 1;
-}
-
-@keyframes imgReveal {
-  from { opacity: 0; transform: scale(1.03); }
-  to   { opacity: 1; transform: scale(1); }
 }
 
 .browser-item:hover img {
