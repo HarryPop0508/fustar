@@ -39,6 +39,9 @@ html {
   overflow-y: scroll;
   scrollbar-width: thin;
   scrollbar-color: #1a1a1a #080808;
+  /* Prevent momentum scroll from breaking snap */
+  overscroll-behavior-y: none;
+  scroll-snap-stop: always;
 }
 
 body {
@@ -1803,16 +1806,38 @@ img {
   #membership {
     overflow-y: auto;
     padding: 1rem;
+    align-items: flex-start;
+  }
+  #membership h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.3rem;
   }
   .membership-sub {
-    margin-bottom: 1.2rem;
+    font-size: 0.75rem;
+    margin-bottom: 1rem;
   }
   .membership-grid {
-    grid-template-columns: 1fr;
-    margin-bottom: 1.2rem;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+    margin-bottom: 1rem;
   }
   .member-card {
-    padding: 1.2rem 1rem 1rem;
+    padding: 1rem 0.8rem 0.8rem;
+  }
+  .member-card h3 {
+    font-size: 0.75rem;
+  }
+  .member-card p {
+    font-size: 0.65rem;
+    line-height: 1.5;
+  }
+  .card-icon {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  .member-join-btn {
+    padding: 0.7rem 2rem;
+    font-size: 0.75rem;
   }
   .browser-grid {
     grid-template-columns: 1fr;

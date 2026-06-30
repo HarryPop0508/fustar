@@ -184,28 +184,39 @@
     if (index < 0 || index >= snapSections.length) return;
     snapIndex = index;
     isSnapping = true;
-    snapSections[index].scrollIntoView({ behavior: 'smooth' });
+    snapSections[index].scrollIntoView({ behavior: 'smooth', block: 'start' });
     clearTimeout(snapTimeout);
+    // Longer cooldown to prevent momentum override
     snapTimeout = setTimeout(() => {
       isSnapping = false;
-    }, 800);
+      // Re-sync after snap
+      snapIndex = getCurrentSectionIndex();
+    }, 1000);
   }
 
+  // Track accumulated scroll for trackpad/magic mouse
+  let wheelAccum = 0;
+  let wheelTimer = null;
+
   window.addEventListener('wheel', (e) => {
-    // Don't snap if browser or viewer is open
     const bv = document.getElementById('browserViewer');
     const browser = document.getElementById('galleryBrowser');
     const lbOverlay = document.getElementById('luckybagOverlay');
     if ((bv && bv.classList.contains('active')) || (browser && browser.classList.contains('active')) || (lbOverlay && lbOverlay.classList.contains('active'))) return;
-    if (isSnapping) {
-      e.preventDefault();
-      return;
-    }
+
     e.preventDefault();
+    if (isSnapping) return;
+
+    wheelAccum += e.deltaY;
+    clearTimeout(wheelTimer);
+    wheelTimer = setTimeout(() => { wheelAccum = 0; }, 300);
+
     const current = getCurrentSectionIndex();
-    if (e.deltaY > 20 && current < snapSections.length - 1) {
+    if (wheelAccum > 80 && current < snapSections.length - 1) {
+      wheelAccum = 0;
       snapTo(current + 1);
-    } else if (e.deltaY < -20 && current > 0) {
+    } else if (wheelAccum < -80 && current > 0) {
+      wheelAccum = 0;
       snapTo(current - 1);
     }
   }, { passive: false });
@@ -213,6 +224,7 @@
   // Touch support
   let touchStartY = 0;
   window.addEventListener('touchstart', (e) => {
+    if (isSnapping) return;
     touchStartY = e.touches[0].clientY;
   }, { passive: true });
 
