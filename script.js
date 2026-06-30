@@ -58,6 +58,9 @@
         <img src="${path}" alt="${cat.name} ${i + 1}" loading="lazy">
         <span class="item-num">0${i + 1}</span>
       `;
+      const img = item.querySelector('img');
+      img.addEventListener('load', () => img.classList.add('loaded'));
+      if (img.complete) img.classList.add('loaded');
       item.addEventListener('click', () => openBv(cat, i));
       browserGrid.appendChild(item);
     });
@@ -109,6 +112,15 @@
   }, { passive: false, capture: true });
 
   document.addEventListener('keydown', (e) => {
+    const lbOverlay = document.getElementById('luckybagOverlay');
+    // Luckybag overlay takes priority
+    if (lbOverlay && lbOverlay.classList.contains('active')) {
+      if (e.key === 'Escape') {
+        lbOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+      return;
+    }
     if (!bv.classList.contains('active') && !browser.classList.contains('active')) return;
     if (bv.classList.contains('active')) {
       if (e.key === 'Escape') closeBv();
@@ -142,7 +154,7 @@
   });
 
   /* ---------- SMART SCROLL SNAP ---------- */
-  const snapSections = document.querySelectorAll('#hero, #gallery, #about, #contact');
+  const snapSections = document.querySelectorAll('#hero, #gallery, #about, #membership, #luckybag, #contact');
   let snapIndex = 0;
   let isSnapping = false;
   let snapTimeout = null;
@@ -179,7 +191,8 @@
     // Don't snap if browser or viewer is open
     const bv = document.getElementById('browserViewer');
     const browser = document.getElementById('galleryBrowser');
-    if ((bv && bv.classList.contains('active')) || (browser && browser.classList.contains('active'))) return;
+    const lbOverlay = document.getElementById('luckybagOverlay');
+    if ((bv && bv.classList.contains('active')) || (browser && browser.classList.contains('active')) || (lbOverlay && lbOverlay.classList.contains('active'))) return;
     if (isSnapping) {
       e.preventDefault();
       return;
@@ -202,7 +215,8 @@
   window.addEventListener('touchend', (e) => {
     const bv = document.getElementById('browserViewer');
     const browser = document.getElementById('galleryBrowser');
-    if ((bv && bv.classList.contains('active')) || (browser && browser.classList.contains('active'))) return;
+    const lbOverlay = document.getElementById('luckybagOverlay');
+    if ((bv && bv.classList.contains('active')) || (browser && browser.classList.contains('active')) || (lbOverlay && lbOverlay.classList.contains('active'))) return;
     if (isSnapping) return;
     const diff = touchStartY - e.changedTouches[0].clientY;
     const current = getCurrentSectionIndex();
@@ -219,7 +233,8 @@
       // Only if no viewer/browser is open
       const bv = document.getElementById('browserViewer');
       const browser = document.getElementById('galleryBrowser');
-      if ((bv && bv.classList.contains('active')) || (browser && browser.classList.contains('active'))) return;
+      const lbOverlay = document.getElementById('luckybagOverlay');
+      if ((bv && bv.classList.contains('active')) || (browser && browser.classList.contains('active')) || (lbOverlay && lbOverlay.classList.contains('active'))) return;
       e.preventDefault();
       const current = getCurrentSectionIndex();
       if (e.key === 'ArrowDown' && current < snapSections.length - 1) {
@@ -237,6 +252,57 @@
     }
   }, { passive: true });
 
+  /* ---------- BREATHING GLOW + EMBER PARTICLES ---------- */
+  const breathingConfig = {
+    gallery:    { glow: 'rgba(240,45,45,0.08) 0%, rgba(200,30,30,0.04) 25%, transparent 55%', size: '70% 55%', pos: '50% 50%', duration: '7s' },
+    about:      { glow: 'rgba(240,45,45,0.07) 0%, rgba(200,30,30,0.03) 35%, transparent 60%', size: '85% 70%', pos: '60% 50%', duration: '9s' },
+    membership: { glow: 'rgba(240,45,45,0.07) 0%, rgba(200,30,30,0.03) 35%, transparent 60%', size: '80% 65%', pos: '50% 45%', duration: '10s' },
+    luckybag:   { glow: 'rgba(240,45,45,0.06) 0%, rgba(200,30,30,0.03) 35%, transparent 60%', size: '75% 60%', pos: '40% 50%', duration: '8s' },
+    contact:    { glow: 'rgba(240,45,45,0.06) 0%, rgba(200,30,30,0.03) 35%, transparent 60%', size: '70% 55%', pos: '50% 55%', duration: '8.5s' }
+  };
+
+  Object.entries(breathingConfig).forEach(([sectionId, config]) => {
+    const section = document.getElementById(sectionId);
+    if (!section) return;
+
+    // Breathing glow overlay
+    const breathDiv = document.createElement('div');
+    breathDiv.className = 'section-breath-overlay';
+    breathDiv.style.cssText = `
+      background: radial-gradient(ellipse ${config.size} at ${config.pos}, ${config.glow});
+      animation: sectionBreathOpacity ${config.duration} ease-in-out infinite;
+    `;
+    section.appendChild(breathDiv);
+
+    // Ember particles (skip contact)
+    if (sectionId !== 'contact') {
+      const embersContainer = document.createElement('div');
+      embersContainer.className = 'gallery-embers-container';
+      const count = sectionId === 'gallery' ? 12 : 6;
+      for (let i = 0; i < count; i++) {
+        const ember = document.createElement('span');
+        ember.className = 'ember';
+        embersContainer.appendChild(ember);
+      }
+      section.appendChild(embersContainer);
+    }
+  });
+
+  /* ---------- SIDE SECTION DOTS ---------- */
+  const dotsContainer = document.createElement('div');
+  dotsContainer.className = 'section-dots';
+  const sectionNames = ['hero', 'gallery', 'about', 'membership', 'luckybag', 'contact'];
+  sectionNames.forEach(id => {
+    const dot = document.createElement('span');
+    dot.className = 'section-dot';
+    dot.setAttribute('data-section', id);
+    dot.addEventListener('click', () => {
+      document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+    });
+    dotsContainer.appendChild(dot);
+  });
+  document.body.appendChild(dotsContainer);
+
   /* ---------- NAV SCROLL EFFECT ---------- */
   const navbar = document.getElementById('navbar');
   let ticking = false;
@@ -247,6 +313,32 @@
     } else {
       navbar.classList.remove('scrolled');
     }
+
+    // Update active nav link
+    const navLinks = document.querySelectorAll('.nav-links a');
+    let currentSection = '';
+    snapSections.forEach(sec => {
+      const top = sec.offsetTop;
+      const bottom = top + sec.offsetHeight;
+      if (window.scrollY + window.innerHeight / 3 >= top && window.scrollY + window.innerHeight / 3 < bottom) {
+        currentSection = sec.id;
+      }
+    });
+    navLinks.forEach(link => {
+      link.classList.remove('active');
+      if (link.getAttribute('href') === '#' + currentSection) {
+        link.classList.add('active');
+      }
+    });
+
+    // Update side dots
+    document.querySelectorAll('.section-dot').forEach(dot => {
+      dot.classList.remove('active');
+      if (dot.getAttribute('data-section') === currentSection) {
+        dot.classList.add('active');
+      }
+    });
+
     ticking = false;
   }
 
@@ -463,24 +555,104 @@
     animId = requestAnimationFrame(animate);
   }
 
-  /* ---------- SUBSCRIBE FORM ---------- */
-  const form = document.getElementById('subscribeForm');
-  if (form) {
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const input = form.querySelector('input');
-      if (input && input.value.trim()) {
-        // Placeholder — replace with real submission logic
-        const btn = form.querySelector('button');
-        const originalText = btn.textContent;
-        btn.textContent = '已订阅';
-        btn.style.color = '#4caf50';
-        input.value = '';
-        setTimeout(() => {
-          btn.textContent = originalText;
-          btn.style.color = '';
-        }, 3000);
+  /* ---------- MEMBER JOIN ---------- */
+  const joinBtn = document.querySelector('.member-join-btn');
+  if (joinBtn) {
+    // Store used IDs to avoid duplicates (session only)
+    const usedIds = new Set();
+
+    function generateUniqueId() {
+      let id;
+      do {
+        id = 'FS' + String(Math.floor(1000 + Math.random() * 9000));
+      } while (usedIds.has(id));
+      usedIds.add(id);
+      return id;
+    }
+
+    joinBtn.addEventListener('click', () => {
+      const id = generateUniqueId();
+      navigator.clipboard.writeText(id).then(() => {
+        // Also try fallback
+      }).catch(() => {});
+
+      // Create in-page notification
+      const notice = document.createElement('div');
+      notice.className = 'member-notice';
+      notice.innerHTML = `
+        <div class="member-notice-card">
+          <span class="notice-close">&times;</span>
+          <div class="notice-icon">◆</div>
+          <h3>股东身份确认</h3>
+          <p class="notice-id-label">你的股东 ID</p>
+          <p class="notice-id">${id}</p>
+          <p class="notice-tip">已自动复制到剪贴板<br>请妥善保存，此 ID 是你的股东证明<br>参与专属购买活动时需出示<br>积分将存入此 ID 名下</p>
+        </div>
+      `;
+      document.body.appendChild(notice);
+
+      // Close handlers
+      const closeBtn = notice.querySelector('.notice-close');
+      closeBtn.addEventListener('click', () => notice.remove());
+      notice.addEventListener('click', (e) => {
+        if (e.target === notice) notice.remove();
+      });
+
+      // Auto-remove after 30s
+      setTimeout(() => {
+        if (notice.parentNode) notice.remove();
+      }, 30000);
+    });
+  }
+
+  /* ---------- LUCKY BAG REVEAL ---------- */
+  const luckybagBtn = document.getElementById('luckybagBtn');
+  const luckybagOverlay = document.getElementById('luckybagOverlay');
+  const luckybagOverlayClose = document.getElementById('luckybagOverlayClose');
+  if (luckybagBtn && luckybagOverlay) {
+    luckybagBtn.addEventListener('click', () => {
+      luckybagOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+    luckybagOverlayClose.addEventListener('click', () => {
+      luckybagOverlay.classList.remove('active');
+      document.body.style.overflow = '';
+    });
+    luckybagOverlay.addEventListener('click', (e) => {
+      if (e.target === luckybagOverlay) {
+        luckybagOverlay.classList.remove('active');
+        document.body.style.overflow = '';
       }
     });
   }
+
+  /* ---------- WEIXIN COPY ---------- */
+  const weixinBtn = document.getElementById('weixinBtn');
+  if (weixinBtn) {
+    weixinBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const wxId = 'hyp1213016856';
+      navigator.clipboard.writeText(wxId).then(() => {
+        weixinBtn.setAttribute('data-tip', '已复制 ✓');
+        setTimeout(() => {
+          weixinBtn.setAttribute('data-tip', wxId);
+        }, 1500);
+      }).catch(() => {
+        // Fallback
+        const ta = document.createElement('textarea');
+        ta.value = wxId;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        weixinBtn.setAttribute('data-tip', '已复制 ✓');
+        setTimeout(() => {
+          weixinBtn.setAttribute('data-tip', wxId);
+        }, 1500);
+      });
+    });
+  }
+
 })();

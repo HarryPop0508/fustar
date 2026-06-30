@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FUSTAR — 暗夜美学 · 服装品牌</title>
+  <meta name="theme-color" content="#080808">
+  <title>Fustar — 暗夜美学 · 服装品牌</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&display=swap" rel="stylesheet">
@@ -21,6 +22,8 @@
         <li><a href="#hero">首页</a></li>
         <li><a href="#gallery">视觉</a></li>
         <li><a href="#about">关于</a></li>
+        <li><a href="#membership">精神股东</a></li>
+        <li><a href="#luckybag">福袋盲盒</a></li>
         <li><a href="#contact">联系</a></li>
       </ul>
     </div>
@@ -113,15 +116,83 @@
     </div>
   </section>
 
+  <!-- ========== MEMBERSHIP ========== -->
+  <section id="membership">
+    <div class="membership-inner">
+      <h2>成为精神股东</h2>
+      <p class="membership-sub">加入 Fustar 核心圈层，享专属权益</p>
+      <div class="membership-grid">
+        <div class="member-card">
+          <div class="card-icon">◇</div>
+          <h3>专属折扣</h3>
+          <p>精神股东独享新品首发折扣，全年最低价锁定</p>
+        </div>
+        <div class="member-card">
+          <div class="card-icon">◆</div>
+          <h3>专属客服</h3>
+          <p>一对一顾问式服务，造型咨询、尺码建议即时响应</p>
+        </div>
+        <div class="member-card">
+          <div class="card-icon">◇</div>
+          <h3>快速退换</h3>
+          <p>专属退换货绿色通道，无需等待，极速处理</p>
+        </div>
+        <div class="member-card">
+          <div class="card-icon">◆</div>
+          <h3>直达反馈</h3>
+          <p>你的意见直达设计团队，参与产品共创与内测</p>
+        </div>
+        <div class="member-card">
+          <div class="card-icon">◇</div>
+          <h3>积分兑换</h3>
+          <p>消费累积积分，兑换限量款与品牌周边好礼</p>
+        </div>
+      </div>
+      <button class="member-join-btn">
+        <span>申请加入</span>
+        <span class="btn-arrow">&rarr;</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ========== LUCKY BAG ========== -->
+  <section id="luckybag">
+    <div class="luckybag-grid">
+      <div class="luckybag-text">
+        <h2>福袋盲盒</h2>
+        <p class="luckybag-sub">神秘惊喜，一触即发</p>
+        <p class="luckybag-desc">
+          每一份福袋都是为你精心准备的暗夜礼赠。<br>
+          揭开它，发现属于你的神秘单品。
+        </p>
+        <button class="luckybag-btn" id="luckybagBtn">
+          <span class="btn-text">揭开福袋</span>
+          <span class="btn-arrow">&rarr;</span>
+        </button>
+      </div>
+      <div class="luckybag-image">
+        <img src="视觉图片/福袋盲盒图.png" alt="福袋盲盒" class="luckybag-cover-img">
+      </div>
+    </div>
+    <!-- Full-screen reveal overlay -->
+    <div class="luckybag-overlay" id="luckybagOverlay">
+      <span class="luckybag-overlay-close" id="luckybagOverlayClose">&times;</span>
+      <div class="luckybag-overlay-scroll">
+        <img src="视觉图片/福袋内容.jpg" alt="福袋内容" class="luckybag-content-img">
+      </div>
+      <p class="luckybag-overlay-hint">↓ 滚动浏览福袋内容</p>
+    </div>
+  </section>
+
   <!-- ========== CONTACT / FOOTER ========== -->
   <section id="contact">
     <div class="contact-inner">
-      <h2>加入暗夜</h2>
+      <h2>加入梵星</h2>
       <p class="contact-desc">关注我们，第一时间获取新品与独家内容。</p>
       <div class="contact-social">
         <a href="https://v.douyin.com/OmvRCgrd95c/" target="_blank" rel="noopener">Douyin</a>
         <a href="https://xhslink.com/m/5QfxDf02JC6" target="_blank" rel="noopener">Xiaohongshu</a>
-        <a href="#" class="weixin-link" data-tip="hyp1213016856">Weixin</a>
+        <a href="javascript:void(0)" class="weixin-link" data-tip="hyp1213016856" id="weixinBtn">Weixin</a>
       </div>
       <div class="footer-bottom">
         <p class="footer-brand">Fustar</p>
