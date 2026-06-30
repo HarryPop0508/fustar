@@ -186,17 +186,14 @@
     isSnapping = true;
     snapSections[index].scrollIntoView({ behavior: 'smooth', block: 'start' });
     clearTimeout(snapTimeout);
-    // Longer cooldown to prevent momentum override
     snapTimeout = setTimeout(() => {
       isSnapping = false;
-      // Re-sync after snap
       snapIndex = getCurrentSectionIndex();
-    }, 1000);
+    }, 900);
   }
 
-  // Track accumulated scroll for trackpad/magic mouse
-  let wheelAccum = 0;
-  let wheelTimer = null;
+  // Strict page-by-page: one scroll gesture = one page
+  let wheelLocked = false;
 
   window.addEventListener('wheel', (e) => {
     const bv = document.getElementById('browserViewer');
@@ -205,26 +202,26 @@
     if ((bv && bv.classList.contains('active')) || (browser && browser.classList.contains('active')) || (lbOverlay && lbOverlay.classList.contains('active'))) return;
 
     e.preventDefault();
-    if (isSnapping) return;
-
-    wheelAccum += e.deltaY;
-    clearTimeout(wheelTimer);
-    wheelTimer = setTimeout(() => { wheelAccum = 0; }, 300);
+    if (isSnapping || wheelLocked) return;
 
     const current = getCurrentSectionIndex();
-    if (wheelAccum > 80 && current < snapSections.length - 1) {
-      wheelAccum = 0;
+    if (e.deltaY > 15 && current < snapSections.length - 1) {
+      wheelLocked = true;
       snapTo(current + 1);
-    } else if (wheelAccum < -80 && current > 0) {
-      wheelAccum = 0;
+      setTimeout(() => { wheelLocked = false; }, 1000);
+    } else if (e.deltaY < -15 && current > 0) {
+      wheelLocked = true;
       snapTo(current - 1);
+      setTimeout(() => { wheelLocked = false; }, 1000);
     }
   }, { passive: false });
 
-  // Touch support
+  // Touch: one swipe = one page
   let touchStartY = 0;
+  let touchLocked = false;
+
   window.addEventListener('touchstart', (e) => {
-    if (isSnapping) return;
+    if (touchLocked || isSnapping) return;
     touchStartY = e.touches[0].clientY;
   }, { passive: true });
 
@@ -233,13 +230,17 @@
     const browser = document.getElementById('galleryBrowser');
     const lbOverlay = document.getElementById('luckybagOverlay');
     if ((bv && bv.classList.contains('active')) || (browser && browser.classList.contains('active')) || (lbOverlay && lbOverlay.classList.contains('active'))) return;
-    if (isSnapping) return;
+    if (touchLocked || isSnapping) return;
     const diff = touchStartY - e.changedTouches[0].clientY;
     const current = getCurrentSectionIndex();
-    if (diff > 40 && current < snapSections.length - 1) {
+    if (diff > 30 && current < snapSections.length - 1) {
+      touchLocked = true;
       snapTo(current + 1);
-    } else if (diff < -40 && current > 0) {
+      setTimeout(() => { touchLocked = false; }, 1000);
+    } else if (diff < -30 && current > 0) {
+      touchLocked = true;
       snapTo(current - 1);
+      setTimeout(() => { touchLocked = false; }, 1000);
     }
   });
 

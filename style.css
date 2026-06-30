@@ -39,7 +39,6 @@ html {
   overflow-y: scroll;
   scrollbar-width: thin;
   scrollbar-color: #1a1a1a #080808;
-  /* Prevent momentum scroll from breaking snap */
   overscroll-behavior-y: none;
   scroll-snap-stop: always;
 }
@@ -47,6 +46,8 @@ html {
 body {
   overflow-x: hidden;
   line-height: 1.6;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Global noise grain overlay */
